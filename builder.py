@@ -82,6 +82,7 @@ def run(command):
 if os.name == 'nt' and msys2depends == True:
     run('pacman -S git --noconfirm')
     run('pacman -S make --noconfirm')
+    run('pacman -S cmake --noconfirm')
     run('pacman -S python3 --noconfirm')
     run('pacman -S mingw-w64-x86_64-gcc --noconfirm')
     run('pacman -S mingw-w64-x86_64-glew --noconfirm')
