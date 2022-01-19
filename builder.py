@@ -141,11 +141,13 @@ while True:
                             event, values = window.read(1)
                             if os.name == 'posix':
                                 os.system('cp "'+baseromfolder+'" "'+repofolder+'/baserom.'+romregion+'.z64"')
+                                os.system('cd "'+repofolder+'" && make clean')
                                 os.system('cd "'+repofolder+'" && make '+buildflags+' VERSION='+romregion)
                                 os.system('cp -r "'+texturepack+'/gfx" "'+repofolder+'/build/'+romregion+'_pc/res"')
                             if os.name == 'nt':
                                 run('dir')
                                 run('cp "'+baseromfolder+'" "'+repofolder+'/baserom.'+romregion+'.z64"')
+                                run('cd "'+repofolder+'" && make clean')
                                 run('cd "'+repofolder+'" && make '+buildflags)
                                 run('cp -r "'+texturepack+'/gfx" "'+repofolder+'/build/'+romregion+'_pc/res"')
 
