@@ -1,0 +1,38 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build-win:
+    name: Build (windows-latest)
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.x' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+        architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+    
+    - name: Install dependencies (Windows)
+      run: |
+        py -m pip install --upgrade pysimplegui cx_Freeze
+
+    - name: Build
+      run: |
+        cxfreeze -c launcher.py --target-dir dist --include-msvcr --target-name=SM64PCLauncher.exe
+        copy NUL dist/builds.txt
+
+    - name: Create Artifact Folder
+      run: |
+        mkdir artifact
+        copy -r dist/* artifact
+
+    - name: Create Build Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: SM64PCLauncher
+        path: artifact/*
+        
