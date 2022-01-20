@@ -18,7 +18,9 @@ news=[
     ]
 options=[
     [sg.Button('Play', size=(10, 2), button_color=("white", playButtonColor),font=(1),disabled=True)],
-    [sg.Button('Build', size=(14, 1), button_color=('white', otherButtonColor))]
+    [sg.Button('Build', size=(14, 1), button_color=('white', otherButtonColor))],
+    [sg.Text("Launch Options:", background_color=windowBackgroundColor, text_color=textColor)],
+    [sg.Multiline(background_color=boxColor, text_color=boxTextColor, key="launchopt")]
 ]
 buildselect=[[
     sg.Text('Select your sm64pc build:', background_color=windowBackgroundColor, text_color=textColor),
@@ -33,9 +35,9 @@ buildselect=[[
    
 layout = [
     [
-        sg.Column(buildselect, size=(300, 300)),
+        sg.Column(buildselect, size=(200, 300)),
         sg.VSeperator(),
-        sg.Column(options,size=(140, 300)),
+        sg.Column(options,size=(200, 300)),
         sg.VSeparator(),
         sg.Column(news, size=(300, 300)),
     ]
@@ -56,10 +58,14 @@ while True:
             window["Play"].update(disabled=False)
     if event == "Play":
         buildfolder, sep, region = buildselected.partition(':')
+        launchoptionslist = values['launchopt']
+        launchoptions = ""
+        for launcho in values['launchopt']:
+            launchoptions += launcho.replace("\n", " ") 
         if os.name == 'nt':
-            os.system('"'+buildfolder+'\\build\\'+region+'_pc\\sm64.'+region+'.f3dex2e.exe"')
+            os.system('"'+buildfolder+'\\build\\'+region+'_pc\\sm64.'+region+'.f3dex2e.exe '+launchoptions+'"')
         if os.name == 'posix':
-            os.system('cd "'+buildfolder+'/build/'+region+'_pc/" && ./sm64.'+region+'.f3dex2e')
+            os.system('cd "'+buildfolder+'/build/'+region+'_pc/" && ./sm64.'+region+'.f3dex2e '+launchoptions+'')
         break
         
     if event == 'Build':
