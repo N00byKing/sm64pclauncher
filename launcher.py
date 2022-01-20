@@ -2,6 +2,7 @@
 
 import PySimpleGUI as sg
 import os
+from sys import exit
 from themeconfig import *
 from urllib.request import urlopen
 sg.theme_background_color(windowBackgroundColor)  
@@ -70,7 +71,6 @@ while True:
         
     if event == 'Build':
         import builder
-        exit() 
     if event == sg.WIN_CLOSED:
         exit()
 

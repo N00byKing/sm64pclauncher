@@ -23,16 +23,11 @@ jobs:
     - name: Build
       run: |
         cxfreeze -c launcher.py --target-dir dist --include-msvcr --target-name=SM64PCLauncher.exe
-        copy NUL dist/builds.txt
-
-    - name: Create Artifact Folder
-      run: |
-        mkdir artifact
-        copy -r dist/* artifact
+        copy builds.txt dist
 
     - name: Create Build Artifact
       uses: actions/upload-artifact@v2
       with:
         name: SM64PCLauncher
-        path: artifact/*
+        path: dist/*
         

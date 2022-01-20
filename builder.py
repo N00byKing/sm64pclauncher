@@ -2,6 +2,7 @@
 
 import PySimpleGUI as sg
 import os
+from sys import exit
 from themeconfig import *
 import subprocess
 import shlex
@@ -169,15 +170,11 @@ while True:
                                 builds = blist.read()
                             with open ('builds.txt', 'w') as bwrite:
                                 bwrite.write(repofolder+':'+romregion+'\n'+builds)
-                            if os.name == 'posix':
-                                os.system('."/'+repofolder+'/build/'+romregion+'_pc/sm64.'+romregion+'.f3dex2e"')
-                            if os.name == 'nt':
-                                os.system('"'+repofolder+'\\build\\'+romregion+'_pc\\sm64.'+romregion+'.f3dex2e.exe"')
-
-                            exit()
-                        
+                            break
+                        break
                     if event == sg.WIN_CLOSED:
                         exit()
+                break
             if event == sg.WIN_CLOSED:
                 exit()
 
