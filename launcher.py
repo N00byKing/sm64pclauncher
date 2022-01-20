@@ -71,6 +71,9 @@ while True:
         
     if event == 'Build':
         import builder
+        with open('builds.txt', 'r') as blist:
+            builds = blist.readlines()
+        window.Element('buildlist').Update(values=builds)
     if event == sg.WIN_CLOSED:
         exit()
 
