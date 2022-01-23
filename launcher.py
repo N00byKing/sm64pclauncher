@@ -10,7 +10,7 @@ with open('builds.txt', 'r') as blist:
     builds = blist.readlines()
 
 
-url = "https://raw.githubusercontent.com/SuperPou1/sm64pclauncher/main/news.txt"
+url = "https://raw.githubusercontent.com/N00byKing/sm64pclauncher/main/news.txt"
 newstext = urlopen(url).read().decode("utf-8")
 
 news=[
