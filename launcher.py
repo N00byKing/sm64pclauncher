@@ -5,10 +5,14 @@ import os
 from sys import exit
 from themeconfig import *
 from urllib.request import urlopen
-sg.theme_background_color(windowBackgroundColor)  
-with open('builds.txt', 'r') as blist:
-    builds = blist.readlines()
+sg.theme_background_color(windowBackgroundColor)
 
+mode = 'r' if os.path.exists('builds.txt') else 'w+'
+with open('builds.txt', mode) as blist:
+    builds = blist.readlines()
+mode = 'r' if os.path.exists('launchopts.txt') else 'w+'
+with open('launchopts.txt', mode) as optlist:
+    launch_opts = optlist.read()
 
 url = "https://raw.githubusercontent.com/N00byKing/sm64pclauncher/archipelago/news.txt"
 newstext = urlopen(url).read().decode("utf-8")
@@ -21,7 +25,7 @@ options=[
     [sg.Button('Play', size=(10, 2), button_color=("white", playButtonColor),font=(1),disabled=True)],
     [sg.Button('Build', size=(14, 1), button_color=('white', otherButtonColor))],
     [sg.Text("Launch Options:", background_color=windowBackgroundColor, text_color=textColor)],
-    [sg.Multiline(background_color=boxColor, text_color=boxTextColor, key="launchopt")]
+    [sg.Multiline(default_text=launch_opts, background_color=boxColor, text_color=boxTextColor, key="launchopt")]
 ]
 buildselect=[[
     sg.Text('Select your sm64pc build:', background_color=windowBackgroundColor, text_color=textColor),
@@ -60,6 +64,8 @@ while True:
     if event == "Play":
         buildfolder, sep, region = buildselected.partition(':')
         launchoptionslist = values['launchopt']
+        with open('launchopts.txt', 'w+') as optlist:
+            optlist.write(launchoptionslist)
         launchoptions = ""
         for launcho in values['launchopt']:
             launchoptions += launcho.replace("\n", " ") 
