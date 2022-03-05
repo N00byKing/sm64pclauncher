@@ -2,6 +2,7 @@
 
 import PySimpleGUI as sg
 import os
+import subprocess
 from sys import exit
 from themeconfig import *
 from urllib.request import urlopen
@@ -69,10 +70,8 @@ while True:
         launchoptions = ""
         for launcho in values['launchopt']:
             launchoptions += launcho.replace("\n", " ") 
-        if os.name == 'nt':
-            os.system('"'+buildfolder+'\\build\\'+region+'_pc\\sm64.'+region+'.f3dex2e.exe '+launchoptions+'"')
-        if os.name == 'posix':
-            os.system('cd "'+buildfolder+'/build/'+region+'_pc/" && ./sm64.'+region+'.f3dex2e '+launchoptions+'')
+        executable = os.path.join(buildfolder, 'build', region+'_pc', 'sm64.'+region+'.f3dex2e')
+        subprocess.run([executable, launchoptions])
         break
         
     if event == 'Build':

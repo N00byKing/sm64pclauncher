@@ -15,8 +15,8 @@ buildfailed = [
 branchselect = [
     [sg.Text("Paste the git link to a sm64pc repo and branch", text_color=textColor, background_color=windowBackgroundColor)],
     [sg.In(background_color=boxColor, text_color=boxTextColor),sg.In(size=(7, 1), background_color=boxColor, text_color=boxTextColor)],
-    [sg.Text("And type the name of repo folder", text_color=textColor, background_color=windowBackgroundColor)],
-    [sg.In(background_color=boxColor, text_color=boxTextColor)],
+    [sg.Text("And select an empty folder to build in", text_color=textColor, background_color=windowBackgroundColor)],
+    [sg.In(background_color=boxColor, text_color=boxTextColor),sg.FolderBrowse(button_color=('white',otherButtonColor))],
     [sg.Text('modelpack folder (optional)', text_color=textColor, background_color=windowBackgroundColor)],
     [sg.In(background_color=boxColor, text_color=boxTextColor),sg.FolderBrowse(button_color=("white",otherButtonColor))],
     [sg.Text('Texture pack folder (optional)', text_color=textColor, background_color=windowBackgroundColor)],
