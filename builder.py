@@ -163,7 +163,7 @@ while True:
                             with open('builds.txt', 'r') as blist:
                                 builds = blist.read()
                             with open ('builds.txt', 'w') as bwrite:
-                                bwrite.write(repofolder+':'+romregion+'\n'+builds)
+                                bwrite.write(repofolder+'|'+romregion+'\n'+builds)
                             break
                         break
                     if event == sg.WIN_CLOSED:

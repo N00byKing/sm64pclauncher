@@ -63,7 +63,7 @@ while True:
         if not buildselected == "":
             window["Play"].update(disabled=False)
     if event == "Play":
-        buildfolder, sep, region = buildselected.partition(':')
+        buildfolder, sep, region = buildselected.partition('|')
         launchoptionslist = values['launchopt']
         with open('launchopts.txt', 'w+') as optlist:
             optlist.write(launchoptionslist)
