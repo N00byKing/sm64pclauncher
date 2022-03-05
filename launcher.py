@@ -2,7 +2,7 @@
 
 import PySimpleGUI as sg
 import os
-import subprocess
+import subprocess, shlex
 from sys import exit
 from themeconfig import *
 from urllib.request import urlopen
@@ -69,11 +69,13 @@ while True:
             optlist.write(launchoptionslist)
         launchoptions = ""
         for launcho in values['launchopt']:
-            launchoptions += launcho.replace("\n", " ") 
-        executable = os.path.join(buildfolder, 'build', region+'_pc', 'sm64.'+region+'.f3dex2e')
+            launchoptions += launcho.replace("\n", " ")
+        args = shlex.split(launchoptions)
+        buildwd = os.path.join(buildfolder, 'build', region+'_pc')
+        executable = os.path.join(buildwd, 'sm64.'+region+'.f3dex2e')
         if os.name == 'nt':
             executable += '.exe'
-        subprocess.run([executable, launchoptions])
+        subprocess.run([executable] + args, cwd=buildwd)
         break
         
     if event == 'Build':
