@@ -27,7 +27,8 @@ buildoptions = [
     [sg.Text('specify build flags and jobs, you can see possible flags on your repo\'s wiki, if you use modelpack, use MODELPACK=1, if you use texturepack, use EXTERNAL_DATA=1',text_color=textColor, background_color=windowBackgroundColor)],
     [sg.In(text_color=boxTextColor, background_color=boxColor),sg.Button('Build', button_color=("white",otherButtonColor))],
     [sg.Text('Mark patches you want to include in build. To add a patch, put it in the "enhancements" folder inside the build folder',text_color=textColor, background_color=windowBackgroundColor)],
-    [sg.Listbox(values="",enable_events=True,select_mode='multiple', size=(40, 10), key="patchlist", bind_return_key = True, background_color=boxColor, text_color=boxTextColor)]
+    [sg.Listbox(values="",enable_events=True,select_mode='multiple', size=(40, 10), key="patchlist", bind_return_key = True, background_color=boxColor, text_color=boxTextColor)],
+    [sg.Button('Refresh Patchlist', button_color=("white",otherButtonColor))]
 ]
 baseromselect = [[sg.Text("Select baserom of sm64 with extension .z64",text_color=textColor, background_color=windowBackgroundColor)],[
         sg.Text("baserom:", background_color=windowBackgroundColor, text_color=textColor),
@@ -127,24 +128,18 @@ while True:
                     event, values = window.read()
                     if event == 'Build':
                         buildflags = values[0]
-                        patches = window.Element('patchlist').get()
                         run('cd "'+repofolder+'" && git reset --hard')
+                        patches = window.Element('patchlist').get()
                         for i in patches:
                             run('cd "'+repofolder+'" && git apply "'+os.path.join("enhancements", i)+'"')
                         window.close()
                         window = sg.Window('Building', building)
                         while True:
                             event, values = window.read(1)
-                            if os.name == 'posix':
-                                os.system('cp "'+baseromfolder+'" "'+repofolder+'/baserom.'+romregion+'.z64"')
-                                os.system('cd "'+repofolder+'" && make clean')
-                                os.system('cd "'+repofolder+'" && make '+buildflags+' VERSION='+romregion)
-                                os.system('cp -r "'+texturepack+'/gfx" "'+repofolder+'/build/'+romregion+'_pc/res"')
-                            if os.name == 'nt':
-                                run('cp "'+baseromfolder+'" "'+repofolder+'/baserom.'+romregion+'.z64"')
-                                run('cd "'+repofolder+'" && make clean')
-                                run('cd "'+repofolder+'" && make '+buildflags+' VERSION='+romregion)
-                                run('cp -r "'+texturepack+'/gfx" "'+repofolder+'/build/'+romregion+'_pc/res"')
+                            run('cp "'+baseromfolder+'" "'+repofolder+'/baserom.'+romregion+'.z64"')
+                            run('cd "'+repofolder+'" && make clean')
+                            run('cd "'+repofolder+'" && make '+buildflags+' VERSION='+romregion)
+                            run('cp -r "'+texturepack+'/gfx" "'+repofolder+'/build/'+romregion+'_pc/res"')
 
                             if os.name == 'nt':
                                 if os.path.exists(repofolder+'/build/'+romregion+'_pc/sm64.'+romregion+'.f3dex2e.exe') == False:
@@ -166,6 +161,9 @@ while True:
                                 bwrite.write(repofolder+'|'+romregion+'\n'+builds)
                             break
                         break
+                    if event == 'Refresh Patchlist':
+                        patches = [ f for f in os.listdir(os.path.join(repofolder, 'enhancements')) if f.endswith(".patch")]
+                        window.Element('patchlist').Update(values=patches)
                     if event == sg.WIN_CLOSED:
                         exit()
                 break
