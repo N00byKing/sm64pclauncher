@@ -1,2 +1,1 @@
 SM64PCLauncher, adapted to work with the sm64ex fork with Archipelago Support.
-Launcher dated 2022-02-19
