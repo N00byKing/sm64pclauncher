@@ -25,7 +25,9 @@ branchselect = [
 ]
 buildoptions = [
     [sg.Text('specify build flags and jobs, you can see possible flags on your repo\'s wiki, if you use modelpack, use MODELPACK=1, if you use texturepack, use EXTERNAL_DATA=1',text_color=textColor, background_color=windowBackgroundColor)],
-    [sg.In(text_color=boxTextColor, background_color=boxColor),sg.Button('Build', button_color=("white",otherButtonColor))]
+    [sg.In(text_color=boxTextColor, background_color=boxColor),sg.Button('Build', button_color=("white",otherButtonColor))],
+    [sg.Text('Mark patches you want to include in build. To add a patch, put it in the "enhancements" folder inside the build folder',text_color=textColor, background_color=windowBackgroundColor)],
+    [sg.Listbox(values="",enable_events=True,select_mode='multiple', size=(40, 10), key="patchlist", bind_return_key = True, background_color=boxColor, text_color=boxTextColor)]
 ]
 baseromselect = [[sg.Text("Select baserom of sm64 with extension .z64",text_color=textColor, background_color=windowBackgroundColor)],[
         sg.Text("baserom:", background_color=windowBackgroundColor, text_color=textColor),
@@ -58,10 +60,6 @@ if os.name == "nt":
             msys2depends = values['msys2depends']
             break
             
-
-
-
-
 
 def run(command):
     if os.name == "nt":
@@ -113,8 +111,6 @@ while True:
             window.close()
             break
 
-        
-
 
         window = sg.Window("baserom", baseromselect)
         
@@ -123,13 +119,18 @@ while True:
             if event == 'Ok': 
                 baseromfolder=values[0]
                 romregion=values[1]
-                
                 window.close()
-                window = sg.Window('build options', buildoptions)
+                window = sg.Window('build options', buildoptions, finalize=True)
+                patches = [ f for f in os.listdir(os.path.join(repofolder, 'enhancements')) if f.endswith(".patch")]
+                window.Element('patchlist').Update(values=patches)
                 while True:
                     event, values = window.read()
                     if event == 'Build':
                         buildflags = values[0]
+                        patches = window.Element('patchlist').get()
+                        run('cd "'+repofolder+'" && git reset --hard')
+                        for i in patches:
+                            run('cd "'+repofolder+'" && git apply "'+os.path.join("enhancements", i)+'"')
                         window.close()
                         window = sg.Window('Building', building)
                         while True:
@@ -140,7 +141,6 @@ while True:
                                 os.system('cd "'+repofolder+'" && make '+buildflags+' VERSION='+romregion)
                                 os.system('cp -r "'+texturepack+'/gfx" "'+repofolder+'/build/'+romregion+'_pc/res"')
                             if os.name == 'nt':
-                                run('dir')
                                 run('cp "'+baseromfolder+'" "'+repofolder+'/baserom.'+romregion+'.z64"')
                                 run('cd "'+repofolder+'" && make clean')
                                 run('cd "'+repofolder+'" && make '+buildflags+' VERSION='+romregion)

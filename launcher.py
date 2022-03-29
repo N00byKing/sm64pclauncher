@@ -38,7 +38,7 @@ buildselect=[[
     )
 ]
 ]
-   
+
 layout = [
     [
         sg.Column(buildselect, size=(200, 300)),
