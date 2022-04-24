@@ -75,7 +75,7 @@ while True:
         executable = os.path.join(buildwd, 'sm64.'+region+'.f3dex2e')
         if os.name == 'nt':
             executable += '.exe'
-        subprocess.run([executable] + args, cwd=buildwd)
+        subprocess.run([os.path.abspath(executable)] + args, cwd=buildwd)
         break
         
     if event == 'Build':
