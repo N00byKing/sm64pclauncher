@@ -6,6 +6,8 @@ from sys import exit
 from themeconfig import *
 import subprocess
 import shlex
+import shutil
+
 sg.theme_background_color(windowBackgroundColor)  
 
 msys2depends = False
@@ -118,7 +120,7 @@ while True:
         while True:
             event, values = window.read()
             if event == 'Ok': 
-                baseromfolder=values[0]
+                baseromfile=values[0]
                 romregion=values[1]
                 window.close()
                 window = sg.Window('build options', buildoptions, finalize=True)
@@ -136,7 +138,7 @@ while True:
                         window = sg.Window('Building', building)
                         while True:
                             event, values = window.read(1)
-                            run('cp "'+baseromfolder+'" "'+repofolder+'/baserom.'+romregion+'.z64"')
+                            shutil.copyfile(baseromfile, os.path.abspath(os.path.join(repofolder, 'baserom.'+romregion+'.z64')))
                             run('cd "'+repofolder+'" && make clean')
                             run('cd "'+repofolder+'" && make '+buildflags+' VERSION='+romregion)
                             run('cp -r "'+texturepack+'/gfx" "'+repofolder+'/build/'+romregion+'_pc/res"')
