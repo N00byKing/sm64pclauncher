@@ -101,19 +101,12 @@ while True:
         modelpackfolder=values[3]
         window.close()
         window = sg.Window('Downloading', downloading)
-        while True:
-            event, values = window.read(1)
-            if os.name == 'posix':
-                os.system('git clone --recursive "'+repolink+'" "'+repofolder+'" --branch='+branchname)
-                os.system('cd '+repofolder+' && git pull')
-                os.system('cp -r "'+modelpackfolder+'/actors" "'+repofolder+'" && cp -r "'+modelpackfolder+'/src" "'+repofolder+'"')
-            if os.name == 'nt':
-                run('git clone --recursive "'+repolink+'" "'+repofolder+'" --branch='+branchname)
-                run('cd "'+repofolder+'" && git pull')
-                run('cp -r "'+modelpackfolder+'/actors" "'+repofolder+'" && cp -r "'+modelpackfolder+'/src" "'+repofolder+'"')
-            window.close()
-            break
 
+        event, values = window.read(1)
+        run('git clone --recursive "'+repolink+'" "'+repofolder+'" --branch='+branchname)
+        run('cd "'+repofolder+'" && git pull')
+        run('cp -r "'+modelpackfolder+'/actors" "'+repofolder+'" && cp -r "'+modelpackfolder+'/src" "'+repofolder+'"')
+        window.close()
 
         window = sg.Window("baserom", baseromselect)
         
@@ -143,20 +136,14 @@ while True:
                             run('cd "'+repofolder+'" && make '+buildflags+' VERSION='+romregion)
                             run('cp -r "'+texturepack+'/gfx" "'+repofolder+'/build/'+romregion+'_pc/res"')
 
-                            if os.name == 'nt':
-                                if os.path.exists(repofolder+'/build/'+romregion+'_pc/sm64.'+romregion+'.f3dex2e.exe') == False:
-                                    window = sg.Window('Build failed! :(', buildfailed)
-                                    while True:
-                                        event, values = window.read()
-                                        if event == sg.WIN_CLOSED or event == 'Ok':
-                                            exit()
-                            if os.name == 'posix':
-                                if os.path.exists(repofolder+'/build/'+romregion+'_pc/sm64.'+romregion+'.f3dex2e') == False:
-                                    window = sg.Window('Build failed! :(', buildfailed)
-                                    while True:
-                                        event, values = window.read()
-                                        if event == sg.WIN_CLOSED or event == 'Ok':
-                                            exit()
+                            if (os.name == 'nt' and not os.path.exists(repofolder+'/build/'+romregion+'_pc/sm64.'+romregion+'.f3dex2e.exe')) or \
+                               (os.name == 'posix' and not os.path.exists(repofolder+'/build/'+romregion+'_pc/sm64.'+romregion+'.f3dex2e')):
+                                window = sg.Window('Build failed! :(', buildfailed)
+                                while True:
+                                    event, values = window.read()
+                                    if event == sg.WIN_CLOSED or event == 'Ok':
+                                        exit()
+
                             with open('builds.txt', 'r') as blist:
                                 builds = blist.read()
                             with open ('builds.txt', 'w') as bwrite:
