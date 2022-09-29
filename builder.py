@@ -10,6 +10,8 @@ import shutil
 
 sg.theme_background_color(windowBackgroundColor)  
 
+logfile = open('logs.txt', 'w')
+
 msys2depends = False
 buildfailed = [
     [sg.Text('Build failed, try to build again', text_color=textColor, background_color=windowBackgroundColor), sg.Button('Ok', button_color=('white', bottomButtonColor))]
@@ -75,11 +77,15 @@ def run(command):
             ],
             encoding="utf-8",
             env={**os.environ, "MSYSTEM": "MINGW64", "CHERE_INVOKING": "yes"},
+            stdout=logfile,
+            stderr=logfile
         ).returncode
     else:
         return subprocess.run(
             command,
             shell=True,
+            stdout=logfile,
+            stderr=logfile
         ).returncode
 if os.name == 'nt' and msys2depends == True:
     run('pacman -S git make mingw-w64-x86_64-cmake python3 mingw-w64-x86_64-gcc mingw-w64-x86_64-glew mingw-w64-x86_64-SDL2 --noconfirm')
@@ -104,7 +110,7 @@ while True:
 
         event, values = window.read(1)
         run('git clone --recursive "'+repolink+'" "'+repofolder+'" --branch='+branchname)
-        run('cd "'+repofolder+'" && git pull')
+        run('cd "'+repofolder+'" && git pull --recurse-submodules')
         run('cp -r "'+modelpackfolder+'/actors" "'+repofolder+'" && cp -r "'+modelpackfolder+'/src" "'+repofolder+'"')
         window.close()
 
